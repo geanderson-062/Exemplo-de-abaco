@@ -1,36 +1,23 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
+from scipy.interpolate import interp1d
 
-# Simulação de dados
-data = {
-    "Tempo (dias)": np.arange(1, 101),
-    "Conteúdo de Água (cm³/cm³)": np.random.rand(100) * 0.4 + 0.1,
-}
+# Dados originais
+x = np.arange(0, 10)
+y = np.exp(-x / 3.0)
 
-# Criação do DataFrame
-df = pd.DataFrame(data)
+# Interpolação
+f = interp1d(x, y)
 
-# Cálculo da média e desvio padrão
-media_agua = np.mean(df["Conteúdo de Água (cm³/cm³)"])
-desvio_agua = np.std(df["Conteúdo de Água (cm³/cm³)"])
+# Novos dados para a interpolação
+x_new = np.arange(0, 9, 0.1)
+y_new = f(x_new)
 
-# Plotando o gráfico com Matplotlib e Seaborn
-plt.figure(figsize=(10, 6))
-sns.lineplot(data=df, x="Tempo (dias)", y="Conteúdo de Água (cm³/cm³)", marker="o")
-plt.axhline(media_agua, color="r", linestyle="--", label=f"Média = {media_agua:.2f}")
-plt.fill_between(
-    df["Tempo (dias)"],
-    media_agua - desvio_agua,
-    media_agua + desvio_agua,
-    color="r",
-    alpha=0.2,
-    label=f"Desvio Padrão = {desvio_agua:.2f}",
-)
-plt.title("Distribuição do Conteúdo de Água no Solo")
-plt.xlabel("Tempo (dias)")
-plt.ylabel("Conteúdo de Água (cm³/cm³)")
+# Plotando os gráficos
+plt.plot(x, y, "o", label="Dados Originais")
+plt.plot(x_new, y_new, "-", label="Interpolação Linear")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.title("Interpolação Linear")
 plt.legend()
 plt.show()
